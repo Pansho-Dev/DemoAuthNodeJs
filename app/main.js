@@ -91,14 +91,36 @@ const loadRegisterTemplate =()=>{
 		body.innerHTML=template
 	
 }
-const addRegisterListener =()=>{}
+const addRegisterListener =()=>{
+	const registerForm  = document.getElementById('register-form')
+	registerForm.onsubmit = async (e) => {
+		e.preventDefault()//evitar refrescar
+		const formData = new FormData(registerForm)
+		const data = Object.fromEntries(formData.entries())//transforma los datos del formulario en objetos
+
+		const response = await fetch('/register',{
+			method: 'POST',
+			body: JSON.stringify(data),
+			headers:{
+				'Content-type': 'application/json' //es para que express interprete bien los objetos y los transforme en objetos para el lado del servidor
+			}
+		})
+		const responseData = await response.text()
+		if(response.status>=300){
+			const errorNode = document.getElementById('error')
+			errorNode.innerHTML = responseData
+		}else{
+			console.log(responseData)
+		}
+	}
+}
 const gotoLoginListener=()=>{}
 
 const registerPage = () =>{
 	console.log('pagina de registro')
 	loadRegisterTemplate()
 	addRegisterListener()
-    gotoLoginListener()
+    gotoLoginListener() 
 }
 
 const loginPage = () =>{
@@ -167,7 +189,7 @@ window.onload = () => {
 	const isLoggedIn = checkLogin()
 	if(isLoggedIn){
 		animalsPage()
-	} else (
+	} else {
 		loginPage()
-		)
+	}
 }
