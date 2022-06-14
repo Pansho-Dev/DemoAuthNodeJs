@@ -65,7 +65,46 @@ localStorage.getItem('jwt')//evalua si inicio sesion o no
 const animalsPage = () =>{
 	loadInitialTemplate()
 	addFormListener()
-  getAnimals()
+  	getAnimals()
+}
+
+const loadRegisterTemplate =()=>{
+	
+		const template = `
+			<h1>Register</h1>
+			<form id="register-form">
+				<div>
+					<label>Correo</label>
+					<input name="email" />
+				</div>
+				<div>
+					<label>Constraseña</label>
+					<input type="password" name="password" />
+				</div>
+				<button type="submit">Enviar</button>
+			</form>
+			<a href="#" id="login" >Iniciar Sesion</a>
+			<div id="error"></div>
+		`
+	
+		const body = document.getElementsByTagName('body')[0]
+		body.innerHTML=template
+	
+}
+const addRegisterListener =()=>{}
+const gotoLoginListener=()=>{}
+
+const registerPage = () =>{
+	console.log('pagina de registro')
+	loadRegisterTemplate()
+	addRegisterListener()
+    gotoLoginListener()
+}
+
+const loginPage = () =>{
+	loadLoginTemplate(),
+	addLoginListener(),
+	gotoRegisterListener()
 }
 
 const loadLoginTemplate = () =>{
@@ -82,12 +121,23 @@ const loadLoginTemplate = () =>{
 			</div>
 			<button type="submit">Enviar</button>
 		</form>
+		<a href="#" id="register" >Registrarse</a>
 		<div id="error"></div>
 	`
 
 	const body = document.getElementsByTagName('body')[0]
 	body.innerHTML=template
 }
+
+const gotoRegisterListener =()=>{
+	const gotoRegister = document.getElementById('register')
+	gotoRegister.onclick = (e) => {
+		e.preventDefault()
+		registerPage()
+	}
+}
+
+
 
 const addLoginListener = () => {
 	const loginForm = document.getElementById('login-form')
@@ -118,7 +168,6 @@ window.onload = () => {
 	if(isLoggedIn){
 		animalsPage()
 	} else (
-		loadLoginTemplate(),//formulario de inicio de sesion
-		addLoginListener()
+		loginPage()
 		)
 }
