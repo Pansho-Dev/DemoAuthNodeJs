@@ -19,7 +19,11 @@ const loadInitialTemplate = () => {
 }
 
 const getAnimals = async () => {
-	const response = await fetch('/animals')
+	const response = await fetch('/animals',{
+		headers:{
+			Authorization : localStorage.getItem('jwt')
+		}
+	})
 	const animals = await response.json()
 	const template = animal => `
 		<li>
@@ -34,6 +38,7 @@ const getAnimals = async () => {
 		animalNode.onclick = async e => {
 			await fetch(`/animals/${animal._id}`, {
 				method: 'DELETE',
+				headers: {Authorization:localStorage.getItem('jwt')}
 			})
 			animalNode.parentNode.remove()
 			alert('Eliminado con éxito')
@@ -51,7 +56,8 @@ const addFormListener = () => {
 			method: 'POST',
 			body: JSON.stringify(data),
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				Authorization:localStorage.getItem('jwt')
 			}
 		})
 		animalForm.reset()
@@ -90,32 +96,17 @@ const loadRegisterTemplate =()=>{
 	body.innerHTML = template
 }
 
-const addRegisterListener = ()=>{
-const registerForm = document.getElementById('register-form')
-registerForm.onsubmit = async (e)=>{
-e.preventDefault()
-const formData = new FormData(registerForm)
-const data = Object.fromEntries(formData.entries())
 
-const response = await fetch('/register', {
-	method: 'POST',
-	body: JSON.stringify(data),
-	headers:{
-		'Content-Type': 'application/json',
+
+
+
+const gotoLoginListener=()=>{
+	const gotoLogin = document.getElementById('login')
+	gotoLogin.onclick=(e)=>{
+	e.preventDefault()
+	loginPage()	
 	}
-})
-const responseData = await response.text()
-if (response.status >=300) {
-	const errorNode = document.getElementById('error')
-	errorNode.innerHTML = responseData
-}else{
-	console.log(responseData)
 }
-
-}
-}
-
-const gotoLoginListener=()=>{}
 
 const registerPage = () =>{
 	loadRegisterTemplate()
@@ -160,15 +151,14 @@ const gotoRegisterListener = () =>{
 }
 
 
-
-const addLoginListener = () => {
-	const loginForm = document.getElementById('login-form')
-	loginForm.onsubmit = async (e) => {
+const authListener = action=>()=>{
+	const form = document.getElementById(`${action}-form`)
+	form.onsubmit = async (e) => {
 		e.preventDefault()//evitar refrescar
-		const formData = new FormData(loginForm)
+		const formData = new FormData(form)
 		const data = Object.fromEntries(formData.entries())//transforma los datos del formulario en objetos
 
-		const response = await fetch('/login',{
+		const response = await fetch(`${action}`,{
 			method: 'POST',
 			body: JSON.stringify(data),
 			headers:{
@@ -180,10 +170,13 @@ const addLoginListener = () => {
 			const errorNode = document.getElementById('error')
 			errorNode.innerHTML = responseData
 		}else{
-			console.log(responseData)
+			localStorage.setItem('jwt',`Bearer ${responseData}`)
+			animalsPage()
 		}
 	}
 }
+const addLoginListener = authListener('login')
+
 
 window.onload = () => {
 	const isLoggedIn = checkLogin()
