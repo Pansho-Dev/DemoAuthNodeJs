@@ -69,58 +69,58 @@ const animalsPage = () =>{
 }
 
 const loadRegisterTemplate =()=>{
+	const template = `
+	<h1>Register</h1>
+	<form id="register-form">
 	
-		const template = `
-			<h1>Register</h1>
-			<form id="register-form">
-				<div>
-					<label>Correo</label>
-					<input name="email" />
-				</div>
-				<div>
-					<label>Constraseña</label>
-					<input type="password" name="password" />
-				</div>
-				<button type="submit">Enviar</button>
-			</form>
-			<a href="#" id="login" >Iniciar Sesion</a>
-			<div id="error"></div>
-		`
-	
-		const body = document.getElementsByTagName('body')[0]
-		body.innerHTML=template
-	
+		<div>
+		<label>Correo</label>
+		<input name="email"/>
+		</div>
+		<div>
+		<label>Constraseña</label>
+		<input name="password"/>
+		</div>
+		<button type="submit">Enviar</button>
+	</form>
+	<a href='#' id="login">Iniciar Sesion</a>
+	<div id="error"></div>
+	`
+	const body = document.getElementsByTagName('body')[0]
+	body.innerHTML = template
 }
-const addRegisterListener =()=>{
-	const registerForm  = document.getElementById('register-form')
-	registerForm.onsubmit = async (e) => {
-		e.preventDefault()//evitar refrescar
-		const formData = new FormData(registerForm)
-		const data = Object.fromEntries(formData.entries())//transforma los datos del formulario en objetos
 
-		const response = await fetch('/register',{
-			method: 'POST',
-			body: JSON.stringify(data),
-			headers:{
-				'Content-type': 'application/json' //es para que express interprete bien los objetos y los transforme en objetos para el lado del servidor
-			}
-		})
-		const responseData = await response.text()
-		if(response.status>=300){
-			const errorNode = document.getElementById('error')
-			errorNode.innerHTML = responseData
-		}else{
-			console.log(responseData)
-		}
+const addRegisterListener = ()=>{
+const registerForm = document.getElementById('register-form')
+registerForm.onsubmit = async (e)=>{
+e.preventDefault()
+const formData = new FormData(registerForm)
+const data = Object.fromEntries(formData.entries())
+
+const response = await fetch('/register', {
+	method: 'POST',
+	body: JSON.stringify(data),
+	headers:{
+		'Content-Type': 'application/json',
 	}
+})
+const responseData = await response.text()
+if (response.status >=300) {
+	const errorNode = document.getElementById('error')
+	errorNode.innerHTML = responseData
+}else{
+	console.log(responseData)
 }
+
+}
+}
+
 const gotoLoginListener=()=>{}
 
 const registerPage = () =>{
-	console.log('pagina de registro')
 	loadRegisterTemplate()
 	addRegisterListener()
-    gotoLoginListener() 
+	gotoLoginListener()
 }
 
 const loginPage = () =>{
@@ -151,11 +151,11 @@ const loadLoginTemplate = () =>{
 	body.innerHTML=template
 }
 
-const gotoRegisterListener =()=>{
+const gotoRegisterListener = () =>{
 	const gotoRegister = document.getElementById('register')
-	gotoRegister.onclick = (e) => {
-		e.preventDefault()
-		registerPage()
+	gotoRegister.onclick=(e)=>{
+	e.preventDefault()
+	registerPage()		
 	}
 }
 

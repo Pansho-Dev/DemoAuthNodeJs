@@ -45,25 +45,24 @@ const Auth = {
             res.send(e.message)
         }
     },
-    register: async(req, res)=>{ 
-        const { body } = req
+    register: async(req,res)=>{
+        const {body} = req
+    
         try {
-            const isUser = await User.findOne({email: body.email})
+            const isUser = await User.findOne({email:body.email})
             if (isUser) {
-                res.send('usuario ya existe')
+                res.send('Usuario ya existe')
             }else{
                 const salt = await bcrypt.genSalt()
-                const hashed=await bcrypt.hash(body.password, salt)
-                const user = await User.create({email: obdy.email, password: hashed, salt})
+                const hashed= await bcrypt.hash(body.password, salt)
+                const user = await User.create({email: body.email, password: hashed, salt})
 
                 const signed = signToken(user._id)
                 res.send(signed)
-
             }
-        } catch (e) {
-            res.status(500).send(e.message)
+        } catch (err) {
+            res.status(500).send(err.message)
         }
     },
 }
-
 module.exports= {Auth, isAuthenticated}
