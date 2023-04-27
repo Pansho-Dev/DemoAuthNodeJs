@@ -5,7 +5,7 @@ const Animal = require('./animal.controller')
 const {Auth, isAuthenticated} = require('./auth.controller')
 const port = 3000
 
-mongoose.connect('mongodb+srv://Pansho:Leica666@cluster0.rhzth.mongodb.net/auth?retryWrites=true&w=majority')
+mongoose.connect('--------------------------')
 
 app.use(express.json())
 
